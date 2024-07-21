@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no" />
+    <title>NetgateSwitch-Login</title>
+
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
+
+        .title {
+            margin: 1rem 0 0 0;
+            font-size: 1.8rem;
+        }
+
+        .form-signin {
+            width: 100%;
+            max-width: 16rem;
+            margin: auto;
+            text-align: center;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
+        }
+
+        .text-area {
+            padding: 1rem;
+        }
+
+        .text {
+            height: 1.9rem;
+            width: 12rem;
+            margin: 0.5rem auto;
+            padding: 0.2rem;
+            border: 0.1rem solid #686868;
+            border-radius: 0.3rem;
+        }
+
+        #loginbtn {
+            width: 3rem;
+            height: 2rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: #dfdfdf;
+        }
+
+        #loginbtn:hover {
+            background-color: #b9b9b9;
+        }
+
+        #loginbtn:active {
+            background-color: #b9b9b9;
+            color: #ffffff;
+            box-shadow: 0 3px #666;
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+
+<body>
+    <main class="form-signin">
+        <h1 class="title">NetgateSwitch</h1>
+        <form>
+            <div class="text-area">
+                <input class="text" id="address" placeholder="ROS-Address" />
+                <input class="text" id="user" placeholder="ROS-User" />
+                <input class="text" id="pwd" type="password" placeholder="ROS-Password" />
+                <input class="text" id="main" placeholder="MainCIDR(e.g.-10.0.1.0/24)" />
+                <input class="text" id="proxy" placeholder="ProxyCIDR(e.g.-10.0.2.0/24)" />
+            </div>
+            <button id="loginbtn">保存</button>
+        </form>
+    </main>
+</body>
+
+<script>
+    document.querySelector('form').addEventListener('submit', (event) => {
+        event.preventDefault();
+    });
+    document.getElementById('loginbtn').addEventListener('click',async (event) => {
+        try{
+            let res = await fetch('./core/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                host: document.getElementById('address').value,
+                user: document.getElementById('user').value,
+                password: document.getElementById('pwd').value,
+                main: document.getElementById('main').value,
+                proxy: document.getElementById('proxy').value
+            })
+            });
+            if(!res.ok){
+                alert(await res.text());
+            }else{
+                window.location.href("./");
+            }
+        }catch(err){
+            console.log(err);
+        }
+    });
+</script>
+
+</html>
