@@ -27,7 +27,7 @@
 
         main {
             width: 100%;
-            max-width: 30rem;
+            max-width: 60rem;
             margin: auto;
             text-align: center;
             background-color: #ffffff;
@@ -35,10 +35,20 @@
             box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.2);
         }
 
+        .container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 20rem;
+        }
+
         .btn {
-            width: 3rem;
+            width: 6rem;
             height: 2rem;
-            margin-bottom: 1rem;
+            margin: 0.2rem;
             border: none;
             border-radius: 0.5rem;
             background-color: #dfdfdf;
@@ -54,24 +64,46 @@
             box-shadow: 0 3px #666;
             transform: translateY(2px);
         }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
     <main>
         <h1 class="title">NetgateSwitch</h1>
-        <form>
-            <div class="text-area">
-
-            </div>
-            <button class="btn" id="getlist">获取</button>
-            <button class="btn" id="switchaddr">更改</button>
-        </form>
+        <div class="container">
+            <table id="table">
+            </table>
+            <button class="btn" id="delcfg" style="margin-bottom: 1rem;">删除配置</button>
+        </div>
     </main>
 </body>
 
 <script>
-    document.getElementById('getlist').addEventListener('click', async (event) => {
+    document.getElementById("delcfg").addEventListener('click', async () => {
+        try {
+            let res = await fetch('./core/logout/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }, body: {}
+            });
+            if (!res.ok) {
+                alert(await res.text());
+            } else {
+                window.location.href = "./";
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    });
+
+    getDHCPList();
+
+    async function getDHCPList() {
         try {
             let res = await fetch('./core/get/', {
                 method: 'POST',
@@ -81,30 +113,89 @@
             });
             if (!res.ok) {
                 alert(await res.text());
+            } else {
+                showDevices(await res.json());
             }
         } catch (err) {
             console.log(err);
         }
-    });
-    document.getElementById('switchaddr').addEventListener('click', async (event) => {
-        try {
-            let res = await fetch('./core/switch/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }, body: JSON.stringify({
-                    id: 'a',
-                    group: 'main',
-                })
-            });
+    }
 
-            if (!res.ok) {
-                alert(await res.text());
-            }
-        } catch (err) {
-            console.log(err);
+    function showDevices(list) {
+        const tb = document.getElementById('table');
+        let trn = document.createElement('tr');
+        let td1 = document.createElement('td');
+        let td2 = document.createElement('td');
+        let td3 = document.createElement('td');
+        let td4 = document.createElement('td');
+        let btn = document.createElement('button');
+        while (tb.firstChild) {
+            tb.removeChild(tb.firstChild);
         }
-    });
+        td1.setAttribute('scope', 'col');
+        td1.append('设备名');
+        td2.setAttribute('scope', 'col');
+        td2.append('IP地址');
+        td3.setAttribute('scope', 'col');
+        td3.append('MAC地址');
+        td4.setAttribute('scope', 'col');
+        td4.append('操作');
+        trn.append(td1, td2, td3, td4);
+        tb.append(trn);
+        for (let i in list) {
+            trn = document.createElement('tr');
+            td1 = document.createElement('td');
+            td2 = document.createElement('td');
+            td3 = document.createElement('td');
+            td4 = document.createElement('td');
+            btn1 = document.createElement('button');
+            btn1.setAttribute('class', 'btn swbtn');
+            btn1.setAttribute('cidrgroup', 'main');
+            btn1.setAttribute('deviceid', list[i].id);
+            btn1.append('切换至Main');
+            btn2 = document.createElement('button');
+            btn2.setAttribute('class', 'btn swbtn');
+            btn2.setAttribute('cidrgroup', 'proxy');
+            btn2.setAttribute('deviceid', list[i].id);
+            btn2.append('切换至Proxy');
+            td1.append(list[i].host);
+            td2.append(list[i].address);
+            td3.append(list[i].mac);
+            td4.append(btn1);
+            td4.append(btn2);
+            trn.append(td1, td2, td3, td4);
+            tb.append(trn);
+        }
+        bindEvent();
+    }
+
+    function bindEvent() {
+        document.querySelectorAll('.swbtn').forEach((button) => {
+            button.addEventListener('click', async () => {
+                try {
+                    let res = await fetch('./core/switch/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }, body: JSON.stringify({
+                            id: button.getAttribute('deviceid'),
+                            group: button.getAttribute('cidrgroup'),
+                        })
+                    });
+                    console.log(button.getAttribute('cidrgroup'));
+
+                    if (!res.ok) {
+                        alert(await res.text());
+                    } else {
+                        alert('切换成功');
+                        window.location.href = "./";
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            });
+        });
+    }
 </script>
 
 </html>

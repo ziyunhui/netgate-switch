@@ -1,1 +1,1 @@
-{"login":true,"host":"10.225.0.1","user":"lan","password":"xp258147","maincidr":"10.225.1.0/24","proxycidr":"10.225.2.0/24"}
+{"port":7000,"login":false,"host":"","user":"","password":"","maincidr":"","proxycidr":""}
