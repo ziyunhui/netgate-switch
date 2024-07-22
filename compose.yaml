@@ -1,0 +1,5 @@
+services:
+  netgate-switch:
+    build: .
+    ports:
+      - "7000:7000"
