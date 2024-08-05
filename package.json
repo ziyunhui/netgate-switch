@@ -12,6 +12,7 @@
   },
   "type": "module",
   "dependencies": {
+    "netgate-switch": "file:",
     "node-routeros": "^1.6.9"
   }
 }

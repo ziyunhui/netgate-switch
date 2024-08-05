@@ -1,6 +1,8 @@
 services:
-  netgate-switch:
-    build: .
-    ports:
-      - "7000:7000"
-    restart: unless-stopped
+    netgate-switch:
+        build: .
+        ports:
+            - '7000:7000'
+        restart: unless-stopped
+        volumes:
+            - /home/ns:/etc/netgateswitch:ro

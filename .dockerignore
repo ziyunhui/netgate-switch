@@ -4,6 +4,7 @@ docker-compose*
 .dockerignore
 .git
 .gitignore
+.prettierrc
 README.md
 LICENSE
 .vscode
