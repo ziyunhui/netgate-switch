@@ -1,6 +1,6 @@
 import { serve } from 'bun';
 import { RouterOSAPI } from 'node-routeros';
-import cfg from '/etc/netgateswitch/config.json';
+import cfg from '/config/config.json';
 
 let api = new RouterOSAPI({
     host: cfg.host,
@@ -184,7 +184,7 @@ async function writeConfig(
     cfg.proxycidr = pcidr;
 
     haslogin = true;
-    await Bun.write('/etc/netgateswitch/config.json', JSON.stringify(cfg));
+    await Bun.write('/config/config.json', JSON.stringify(cfg));
 }
 
 async function cleanConfig() {
@@ -195,5 +195,5 @@ async function cleanConfig() {
     cfg.password = '';
     cfg.maincidr = '';
     cfg.proxycidr = '';
-    await Bun.write('/etc/netgateswitch/config.json', JSON.stringify(cfg));
+    await Bun.write('/config/config.json', JSON.stringify(cfg));
 }

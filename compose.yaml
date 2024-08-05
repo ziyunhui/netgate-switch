@@ -5,4 +5,4 @@ services:
             - '7000:7000'
         restart: unless-stopped
         volumes:
-            - /home/ns:/etc/netgateswitch:ro
+            - /home/ns:/config:ro
