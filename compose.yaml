@@ -1,6 +1,7 @@
 services:
     netgate-switch:
         build: .
+        pull_policy: build
         ports:
             - '7000:7000'
         restart: unless-stopped
