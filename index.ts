@@ -1,6 +1,10 @@
 import { serve } from 'bun';
 import { RouterOSAPI } from 'node-routeros';
-import cfg from '/config/config.json';
+
+const path = '/config/config.json';
+const cfgfile = Bun.file(path);
+let cfg = await cfgfile.json();
+console.log(cfg);
 
 let api = new RouterOSAPI({
     host: cfg.host,
@@ -146,7 +150,11 @@ async function switchNetgate(id: string, addr: string, group: string) {
         let targetcidr = (group === 'proxy' ? proxycidr : maincidr)
             .split('/')[0]
             .split('.');
+        console.log(proxycidr);
+        console.log(maincidr);
+        console.log(targetcidr);
         let address = addr.split('.');
+        console.log(address);
         let num = 2;
         if (mask == 16) {
             num = 1;
