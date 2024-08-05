@@ -1,4 +1,4 @@
-FROM oven/bun:latest
+FROM oven/bun:1
 WORKDIR /usr/src/app
 COPY . .
 COPY ./config.json /config
