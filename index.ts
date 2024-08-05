@@ -1,7 +1,8 @@
 import { serve } from 'bun';
 import { RouterOSAPI } from 'node-routeros';
 
-const path = '/config/config.json';
+// const path = '/config/config.json';
+const path = './config.json';
 const cfgfile = Bun.file(path);
 let cfg = await cfgfile.json();
 console.log(cfg);

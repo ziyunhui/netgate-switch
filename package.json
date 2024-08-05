@@ -1,18 +1,17 @@
 {
-  "name": "netgate-switch",
-  "module": "index.ts",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "scripts": {
-    "dev": "bun run index.ts"
-  },
-  "type": "module",
-  "dependencies": {
-    "netgate-switch": "file:",
-    "node-routeros": "^1.6.9"
-  }
+    "name": "netgate-switch",
+    "module": "index.ts",
+    "devDependencies": {
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "scripts": {
+        "dev": "bun run index.ts"
+    },
+    "type": "module",
+    "dependencies": {
+        "node-routeros": "^1.6.9"
+    }
 }
