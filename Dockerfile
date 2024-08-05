@@ -2,9 +2,8 @@ FROM oven/bun:latest
 WORKDIR /usr/src/app
 COPY ./config.json /config
 COPY . .
-RUN bun install --frozen-lockfile --production
+RUN bun install --production
 ENV NODE_ENV=production
-RUN bun run build
 
 EXPOSE 7000/tcp
 VOLUME [ "/config"]
