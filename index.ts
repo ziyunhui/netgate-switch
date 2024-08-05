@@ -1,8 +1,7 @@
 import { serve } from 'bun';
 import { RouterOSAPI } from 'node-routeros';
 
-// const path = '/config/config.json';
-const path = './config.json';
+const path = '/config/config.json';
 const cfgfile = Bun.file(path);
 let cfg = await cfgfile.json();
 console.log(cfg);
@@ -15,7 +14,6 @@ let api = new RouterOSAPI({
 
 let maincidr = cfg.maincidr;
 let proxycidr = cfg.proxycidr;
-
 let haslogin = cfg.login;
 type Device = {
     id: string;
@@ -74,7 +72,8 @@ const server = serve({
         if (url.pathname === '/core/get/') {
             if (!haslogin)
                 return new Response('ROS配置未设置', { status: 401 });
-            return new Response(JSON.stringify(await getDHCPList()));
+            let ipaddr = request.headers.get('x-forwarded-for');
+            return new Response(JSON.stringify(await getDHCPList(ipaddr)));
         }
 
         if (url.pathname === '/core/switch/') {
@@ -101,6 +100,9 @@ const server = serve({
             }
             if (group !== 'main' && group !== 'proxy') {
                 return new Response('group错误', { status: 401 });
+            }
+            if (maincidr === '' || proxycidr === '') {
+                return new Response('配置文件错误', { status: 401 });
             }
             if (await switchNetgate(id, addr, group)) {
                 return new Response('切换成功');
@@ -131,18 +133,27 @@ async function connectAPI() {
     }
 }
 
-async function getDHCPList() {
+async function getDHCPList(addr: string | null) {
     const result = await api.write('/ip/dhcp-server/lease/print');
     list = [];
     for (let eq in result) {
-        list.push({
+        let format = {
             id: result[eq]['.id'],
             address: result[eq]['address'],
             mac: result[eq]['mac-address'],
             status: result[eq]['status'],
             host: result[eq]['host-name'],
             comment: result[eq]['comment'],
-        });
+        };
+        if (addr !== null || addr !== undefined || addr !== '') {
+            if (addr === format.address) {
+                list.unshift(format);
+            } else {
+                list.push(format);
+            }
+            continue;
+        }
+        list.push(format);
     }
     return list;
 }
@@ -153,11 +164,7 @@ async function switchNetgate(id: string, addr: string, group: string) {
         let targetcidr = (group === 'proxy' ? proxycidr : maincidr)
             .split('/')[0]
             .split('.');
-        console.log(proxycidr);
-        console.log(maincidr);
-        console.log(targetcidr);
         let address = addr.split('.');
-        console.log(address);
         let num = 2;
         if (mask == 16) {
             num = 1;
@@ -195,7 +202,7 @@ async function writeConfig(
     cfg.proxycidr = pcidr;
 
     haslogin = true;
-    await Bun.write('/config/config.json', JSON.stringify(cfg));
+    await Bun.write(path, JSON.stringify(cfg));
 }
 
 async function cleanConfig() {
@@ -206,5 +213,5 @@ async function cleanConfig() {
     cfg.password = '';
     cfg.maincidr = '';
     cfg.proxycidr = '';
-    await Bun.write('/config/config.json', JSON.stringify(cfg));
+    await Bun.write(path, JSON.stringify(cfg));
 }
