@@ -13,8 +13,8 @@ let api = new RouterOSAPI({
     password: cfg.password,
 });
 
-const maincidr = cfg.maincidr;
-const proxycidr = cfg.proxycidr;
+let maincidr = cfg.maincidr;
+let proxycidr = cfg.proxycidr;
 
 let haslogin = cfg.login;
 type Device = {
@@ -62,6 +62,8 @@ const server = serve({
                     data.main,
                     data.proxy
                 );
+                maincidr = data.main;
+                proxycidr = data.proxy;
                 console.log('配置文件已更新');
                 return new Response('登入成功');
             } else {
