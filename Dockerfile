@@ -1,6 +1,6 @@
 FROM oven/bun:latest
 WORKDIR /usr/src/app
-MKDIR /config
+RUN mkdir -p /config
 COPY ./config.json /config
 COPY . .
 RUN bun install --frozen-lockfile --production
