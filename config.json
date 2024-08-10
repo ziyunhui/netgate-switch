@@ -1,1 +1,9 @@
-{"port":7000,"login":false,"host":"","user":"","password":"","maincidr":"","proxycidr":""}
+{
+    "port": 7000,
+    "login": false,
+    "host": "",
+    "user": "",
+    "password": "",
+    "maincidr": "",
+    "proxycidr": ""
+}

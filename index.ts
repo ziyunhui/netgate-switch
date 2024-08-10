@@ -4,7 +4,6 @@ import { RouterOSAPI } from 'node-routeros';
 const path = '/config/config.json';
 const cfgfile = Bun.file(path);
 let cfg = await cfgfile.json();
-console.log(cfg);
 
 let api = new RouterOSAPI({
     host: cfg.host,
@@ -33,7 +32,7 @@ if (haslogin) {
 
 const server = serve({
     port: cfg.port,
-    async fetch(request) {
+    async fetch(request, server) {
         const url = new URL(request.url);
         if (url.pathname === '/') {
             let file = haslogin
@@ -72,7 +71,8 @@ const server = serve({
         if (url.pathname === '/core/get/') {
             if (!haslogin)
                 return new Response('ROS配置未设置', { status: 401 });
-            let ipaddr = request.headers.get('x-forwarded-for');
+            const sockaddr = server.requestIP(request);
+            let ipaddr = sockaddr === null ? '' : sockaddr.address;
             return new Response(JSON.stringify(await getDHCPList(ipaddr)));
         }
 
