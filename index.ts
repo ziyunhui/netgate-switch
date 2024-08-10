@@ -74,7 +74,6 @@ const server = serve({
             const sockaddr = server.requestIP(request);
             let ipaddr = sockaddr === null ? '' : sockaddr.address;
             console.log(sockaddr);
-
             return new Response(JSON.stringify(await getDHCPList(ipaddr)));
         }
 
