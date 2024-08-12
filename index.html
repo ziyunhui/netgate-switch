@@ -168,7 +168,7 @@
             btn2.setAttribute('cidrgroup', 'proxy');
             btn2.setAttribute('deviceid', list[i].id);
             btn2.append('切换至Proxy');
-            td1.append(list[i].comment === '' ? list[i].host : list[i].comment);
+            td1.append(list[i].comment === undefined ? list[i].host : list[i].comment);
             td2.append(list[i].address);
             td3.append(list[i].mac);
             td4.append(btn1);
