@@ -2,6 +2,7 @@ services:
     netgate-switch:
         build: .
         pull_policy: build
+        container_name: NetgateSwitch
         ports:
             - '7000:7000'
         restart: unless-stopped

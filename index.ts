@@ -72,9 +72,12 @@ const server = serve({
             if (!haslogin)
                 return new Response('ROS配置未设置', { status: 401 });
             const sockaddr = server.requestIP(request);
-            let ipaddr = sockaddr === null ? '' : sockaddr.address;
+            let ipinfo = sockaddr === null ? '' : sockaddr.address;
+            let ipaddr = ipinfo.split(':');
             console.log(sockaddr);
-            return new Response(JSON.stringify(await getDHCPList(ipaddr)));
+            return new Response(
+                JSON.stringify(await getDHCPList(ipaddr[ipaddr.length - 1]))
+            );
         }
 
         if (url.pathname === '/core/switch/') {
