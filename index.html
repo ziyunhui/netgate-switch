@@ -54,6 +54,14 @@
             background-color: #dfdfdf;
         }
 
+        .device {
+            background-color: #ffff00;
+        }
+
+        .online {
+            color: #00ff00;
+        }
+
         .btn:hover {
             background-color: #b9b9b9;
         }
@@ -144,7 +152,9 @@
         tb.append(trn);
         for (let i in list) {
             trn = document.createElement('tr');
+            trn.setAttribute('class', list[i].device === true ? 'device' : '');
             td1 = document.createElement('td');
+            td1.setAttribute('class', list[i].status === 'bound' ? 'online' : '');
             td2 = document.createElement('td');
             td3 = document.createElement('td');
             td4 = document.createElement('td');
@@ -158,7 +168,7 @@
             btn2.setAttribute('cidrgroup', 'proxy');
             btn2.setAttribute('deviceid', list[i].id);
             btn2.append('切换至Proxy');
-            td1.append(list[i].host);
+            td1.append(list[i].comment === '' ? list[i].host : list[i].comment);
             td2.append(list[i].address);
             td3.append(list[i].mac);
             td4.append(btn1);

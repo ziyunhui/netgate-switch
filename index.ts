@@ -148,9 +148,11 @@ async function getDHCPList(addr: string | null) {
             status: result[eq]['status'],
             host: result[eq]['host-name'],
             comment: result[eq]['comment'],
+            device: false,
         };
         if (addr !== null || addr !== undefined || addr !== '') {
             if (addr === format.address) {
+                format.device = true;
                 list.unshift(format);
             } else {
                 list.push(format);
