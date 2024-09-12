@@ -138,28 +138,37 @@ async function connectAPI() {
 }
 
 async function getDHCPList(addr: string | null) {
-    const result = await api.write('/ip/dhcp-server/lease/print');
     list = [];
-    for (let eq in result) {
-        let format = {
-            id: result[eq]['.id'],
-            address: result[eq]['address'],
-            mac: result[eq]['mac-address'],
-            status: result[eq]['status'],
-            host: result[eq]['host-name'],
-            comment: result[eq]['comment'],
-            device: false,
-        };
-        if (addr !== null || addr !== undefined || addr !== '') {
-            if (addr === format.address) {
-                format.device = true;
-                list.unshift(format);
-            } else {
-                list.push(format);
+    try {
+        const result = await api.write('/ip/dhcp-server/lease/print');
+        for (let eq in result) {
+            let format = {
+                id: result[eq]['.id'],
+                address: result[eq]['address'],
+                mac: result[eq]['mac-address'],
+                status: result[eq]['status'],
+                host: result[eq]['host-name'],
+                comment: result[eq]['comment'],
+                device: false,
+            };
+            if (addr !== null || addr !== undefined || addr !== '') {
+                if (addr === format.address) {
+                    format.device = true;
+                    list.unshift(format);
+                } else {
+                    list.push(format);
+                }
+                continue;
             }
-            continue;
+            list.push(format);
         }
-        list.push(format);
+    } catch (e) {
+        api = new RouterOSAPI({
+            host: cfg.host,
+            user: cfg.user,
+            password: cfg.password,
+        });
+        api.connect();
     }
     return list;
 }
