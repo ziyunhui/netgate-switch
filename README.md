@@ -1,15 +1,23 @@
-# netgate-switch
+# ROS 网段切换器
 
-To install dependencies:
+基于 bun 运行的 RouterOS 网段切换器前/后端。局域网环境下经常使用网段划分不同用途、类型的设备，以便利用 DHCP 下发不同的网关、DNS、NTP 等信息。直接使用 ros 前端或者 winbox 进行修改是个好方法，然而不是所有设备都能方便地登入以及操作（如移动设备），同时对 ros 的完全访问可能带来额外的安全风险。本项目旨在使局域网中各种设备都能快速便捷切换所在网段。
+
+# 使用方法
+
+1.在 ROS 中创建一个可读写账户
+
+2.准备两个网段，如 10.0.0.0/16、10.1.0.0/16。CRID 数字形式表达，仅支持/8 /16 /24。各设备主机号将被保留。
+
+3.安装依赖:
 
 ```bash
 bun install
 ```
 
-To run:
+4.运行:
 
 ```bash
 bun run index.ts
 ```
 
-This project was created using `bun init` in bun v1.1.18. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+5.填写网关、账密信息登入后即可运行
